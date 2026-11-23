@@ -1,0 +1,108 @@
+
+# School Transport System - Colour Theme
+
+# Main colours
+PRIMARY = "#2C3A1C"
+SECONDARY = "#55672B"
+MOSS = "#8C9E5A"
+ACCENT = "#F4B41A"
+ACCENT_LIGHT = "#F9DE86"
+
+# Background colours
+BACKGROUND = "#E9DFC8"
+CARD_BACKGROUND = "#FBF7EC"
+GLASS_FIELD = "#F4EDDC"
+GLASS_SIDEBAR = "#1F2915"
+PALE_GREEN = "#DDE3C6"
+GLASS_BORDER = "#E7DDC6"
+GLASS_SHADOW = "#E7DDC6"
+GLASS_HIGHLIGHT = "#FFFFFF"
+DARK_HOVER = "#1C2312"
+ROW_HOVER = "#F1EAD3"
+ROW_EDITING = "#F3E3B3"
+
+# Text colours
+TEXT_PRIMARY = "#1C2312"
+TEXT_SECONDARY = "#5B6244"
+TEXT_LIGHT = "#FBF7EC"
+
+# Status colours
+SUCCESS = "#55672B"
+WARNING = "#F4B41A"
+DANGER = "#B84A32"
+
+# Interface settings
+FONT_FAMILY = "Segoe UI"
+FONT_SIZE = 10
+
+# Welcome screen design tokens
+WELCOME_FOREST_OLIVE = "#1F2915"
+WELCOME_ROAD_OLIVE = "#2A3819"
+WELCOME_DARK_OLIVE = "#2C3A1C"
+WELCOME_PILL_HOVER = "#3B4B26"
+WELCOME_OLIVE = "#55672B"
+WELCOME_MOSS = "#8C9E5A"
+WELCOME_SAGE = "#DDE3C6"
+WELCOME_SOFT_SAGE = "#BFC79B"
+WELCOME_CREAM = "#FBF7EC"
+WELCOME_LINEN = "#F4EDDC"
+WELCOME_SAND = "#D9CFB3"
+WELCOME_DIVIDER = "#BFB594"
+WELCOME_INK = "#1C2312"
+WELCOME_OLIVE_GREY = "#5B6244"
+WELCOME_PLACEHOLDER = "#8A8F72"
+WELCOME_MARIGOLD = "#F4B41A"
+
+WELCOME_DISPLAY_FONT = "Bricolage Grotesque"
+WELCOME_BODY_FONT = "Manrope"
+WELCOME_FONT_FALLBACK = "Segoe UI"
+
+WELCOME_HEADLINE_SIZE = 44
+WELCOME_TICKET_TITLE_SIZE = 36
+WELCOME_LOGIN_TITLE_SIZE = 38
+WELCOME_LOGO_SIZE = 24
+WELCOME_INTRO_SIZE = 18
+WELCOME_TICKET_BODY_SIZE = 15
+WELCOME_BUTTON_SIZE = 15
+WELCOME_LOGIN_BUTTON_SIZE = 16
+WELCOME_SMALL_LABEL_SIZE = 11
+WELCOME_PILL_SIZE = 14
+WELCOME_TICKER_SIZE = 14
+
+WELCOME_PAGE_PADDING_TOP = 32
+WELCOME_PAGE_PADDING_BOTTOM = 36
+WELCOME_TICKET_GAP = 22
+WELCOME_HERO_COLUMN_GAP = 48
+WELCOME_TICKET_STUB_WIDTH = 96
+WELCOME_TICKET_RADIUS = 28
+WELCOME_INPUT_RADIUS = 16
+WELCOME_BUTTON_HEIGHT = 48
+WELCOME_LOGIN_BUTTON_HEIGHT = 54
+WELCOME_INPUT_HEIGHT = 52
+WELCOME_NOTCH_DIAMETER = 28
+WELCOME_TICKER_VERTICAL_PADDING = 14
+
+
+def glass_tint(color, background, opacity=0.22):
+
+    color_channels = tuple(
+        int(color[index:index + 2], 16)
+        for index in (1, 3, 5)
+    )
+    background_channels = tuple(
+        int(background[index:index + 2], 16)
+        for index in (1, 3, 5)
+    )
+    mixed_channels = tuple(
+        round(
+            background_channels[index] * (1 - opacity)
+            + color_channels[index] * opacity
+        )
+        for index in range(3)
+    )
+    return "#{:02X}{:02X}{:02X}".format(*mixed_channels)
+
+
+def darken(color, amount=0.22):
+
+    return glass_tint(DARK_HOVER, color, amount)
