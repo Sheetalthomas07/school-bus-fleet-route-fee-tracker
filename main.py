@@ -25,6 +25,7 @@ from utils.rounded_widgets import (
     RoundedPanel,
     ScrollableFrame
 )
+from utils.navigation_animation import NavigationAnimator
 
 
 # ==========================================
@@ -167,56 +168,72 @@ def set_active_menu(module_name):
         handler = nav_hover_handlers.get(btn)
         if handler is not None:
             handler(is_active)
+    if "navigation_animator" in globals():
+        navigation_animator.set_active(module_name)
 
 
 # Navigation button action
 def open_module(module_name):
 
-    if page_transition["busy"]:
-        return
-
-    set_active_menu(module_name)
-    module_page = None
-
-    if module_name == "Routes & Buses":
-        module_page = open_routes_module(page_container)
-
-    elif module_name == "Bus Stops":
-        module_page = open_stops_module(page_container)
-
-    elif module_name == "Student Allocation":
-        module_page = open_student_allocation_module(
-            page_container,
-            refresh_dashboard
-        )
-
-    elif module_name == "Fee Management":
-        module_page = open_fee_management_module(
-            page_container,
-            refresh_dashboard
-        )
-
-    elif module_name == "Bus Passes":
-        module_page = open_bus_passes_module(page_container, refresh_dashboard)
-
-    elif module_name == "Reports":
-        module_page = open_reports_module(page_container)
-
-    elif module_name == "Dashboard":
-        refresh_dashboard()
-        show_page(dashboard_page)
-        if sidebar_animation["target_x"] == 0:
-            toggle_sidebar()
-        return
-
-    else:
-        messagebox.showinfo(
+    if navigation_animator._busy:
+        navigation_animator._pending = (
             module_name,
-            f"{module_name} module will be available soon!"
+            lambda: open_module(module_name)
         )
+        return
 
-    if module_page is not None:
-        show_page(module_page)
+    def switch_page():
+
+        module_page = None
+        if module_name == "Routes & Buses":
+            module_page = open_routes_module(page_container)
+
+        elif module_name == "Bus Stops":
+            module_page = open_stops_module(page_container)
+
+        elif module_name == "Student Allocation":
+            module_page = open_student_allocation_module(
+                page_container,
+                refresh_dashboard
+            )
+
+        elif module_name == "Fee Management":
+            module_page = open_fee_management_module(
+                page_container,
+                refresh_dashboard
+            )
+
+        elif module_name == "Bus Passes":
+            module_page = open_bus_passes_module(
+                page_container,
+                refresh_dashboard
+            )
+
+        elif module_name == "Reports":
+            module_page = open_reports_module(page_container)
+
+        elif module_name == "Dashboard":
+            refresh_dashboard()
+            show_page(dashboard_page)
+            if sidebar_animation["target_x"] == 0:
+                toggle_sidebar()
+            return dashboard_page
+
+        else:
+            messagebox.showinfo(
+                module_name,
+                f"{module_name} module will be available soon!"
+            )
+
+        if module_page is not None:
+            show_page(module_page)
+        return module_page
+
+    navigation_animator.request_navigation(
+        module_name,
+        switch_page,
+        page_transition["current"]
+    )
 
 
 # Navigation menu items
@@ -262,6 +279,16 @@ for icon, item in menu_items:
     nav_hover_handlers[button] = bind_sidebar_item(button)
 
 set_active_menu(active_menu.get())
+
+navigation_animator = NavigationAnimator(
+    root,
+    sidebar,
+    {
+        name: button
+        for button, name in nav_button_names.items()
+    },
+    [item[1] for item in menu_items]
+)
 
 admin_footer = tk.Frame(
     sidebar,
@@ -561,14 +588,22 @@ admin_label = tk.Label(
 )
 admin_label.pack(anchor="w")
 
-dashboard_title = tk.Label(
+dashboard_title_clip = tk.Frame(
     heading_text,
+    width=1,
+    height=34,
+    bg=theme.BACKGROUND
+)
+dashboard_title_clip.pack_propagate(False)
+dashboard_title_clip.pack(anchor="w")
+dashboard_title = tk.Label(
+    dashboard_title_clip,
     text="Dashboard",
     font=("Segoe UI", 26, "bold"),
     bg=theme.BACKGROUND,
     fg=theme.TEXT_PRIMARY
 )
-dashboard_title.pack(anchor="w")
+dashboard_title.place(x=0, y=0)
 
 profile_panel = RoundedPanel(
     dashboard_heading,
@@ -1956,6 +1991,19 @@ search_entry.bind(
 # RUN APPLICATION
 # ==========================================
 
+dashboard_page._navigation_heading_meta = {
+    "title_clip": dashboard_title_clip,
+    "title_label": dashboard_title,
+    "admin_label": admin_label,
+    "subtitle_label": None,
+    "metric_widgets": (),
+    "rest_widgets": tuple(
+        widget
+        for widget in dashboard_content.winfo_children()
+        if widget is not dashboard_heading
+    )
+}
+
 apply_interactive_effects(root, skip_buttons=nav_buttons)
 
 sidebar_slot.pack_forget()
@@ -1970,6 +2018,7 @@ def open_dashboard_after_admin_sign_in():
     content_area.pack(side="right", fill="both", expand=True)
     set_active_menu("Dashboard")
     refresh_dashboard()
+    navigation_animator.run_initial_heading(dashboard_page, "Dashboard")
 
 
 welcome_screen = create_welcome_screen(

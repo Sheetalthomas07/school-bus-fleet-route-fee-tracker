@@ -11,30 +11,42 @@ def create_module_header(parent, title, subtitle, metrics=()):
 
     title_area = tk.Frame(header, bg=theme.BACKGROUND)
     title_area.pack(side="left", fill="x", expand=True)
-    tk.Label(
+    admin_label = tk.Label(
         title_area,
         text="SCHOOL ADMINISTRATION",
         font=("Segoe UI", 7, "bold"),
         bg=theme.BACKGROUND,
         fg=theme.TEXT_SECONDARY
-    ).pack(anchor="w")
-    tk.Label(
+    )
+    admin_label.pack(anchor="w")
+    title_clip = tk.Frame(
         title_area,
+        width=1,
+        height=32,
+        bg=theme.BACKGROUND
+    )
+    title_clip.pack_propagate(False)
+    title_clip.pack(anchor="w")
+    title_label = tk.Label(
+        title_clip,
         text=title,
         font=("Segoe UI", 25, "bold"),
         bg=theme.BACKGROUND,
         fg=theme.TEXT_PRIMARY
-    ).pack(anchor="w")
-    tk.Label(
+    )
+    title_label.place(x=0, y=0)
+    subtitle_label = tk.Label(
         title_area,
         text=subtitle,
         font=("Segoe UI", 9),
         bg=theme.BACKGROUND,
         fg=theme.TEXT_SECONDARY
-    ).pack(anchor="w", pady=(2, 0))
+    )
+    subtitle_label.pack(anchor="w", pady=(2, 0))
 
     metric_area = tk.Frame(header, bg=theme.BACKGROUND)
     metric_area.pack(side="right", padx=(12, 0))
+    metric_widgets = []
     for index, (value, label) in enumerate(metrics):
         background = theme.ACCENT if index == 0 else theme.PRIMARY
         foreground = (
@@ -65,6 +77,16 @@ def create_module_header(parent, title, subtitle, metrics=()):
             bg=background,
             fg=foreground
         ).pack(side="left")
+        metric_widgets.append(chip)
+
+    header._navigation_heading_meta = {
+        "title_clip": title_clip,
+        "title_label": title_label,
+        "admin_label": admin_label,
+        "subtitle_label": subtitle_label,
+        "metric_widgets": tuple(metric_widgets),
+        "rest_widgets": ()
+    }
 
     return header
 

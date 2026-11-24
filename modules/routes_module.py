@@ -27,7 +27,7 @@ def open_routes_module(parent):
 
     route_count_value = tk.StringVar(master=routes_page, value="0")
     total_seats_value = tk.StringVar(master=routes_page, value="0")
-    create_module_header(
+    module_header = create_module_header(
         routes_window,
         "Routes & Buses",
         "Manage school bus routes and driver information.",
@@ -752,5 +752,13 @@ def open_routes_module(parent):
 
     load_routes(animate_counts=True)
     route_entry.focus_set()
+    module_header._navigation_heading_meta["rest_widgets"] = tuple(
+        widget
+        for widget in routes_window.winfo_children()
+        if widget is not module_header
+    )
+    routes_page._navigation_heading_meta = (
+        module_header._navigation_heading_meta
+    )
     apply_interactive_effects(routes_page, fade=False)
     return routes_page
