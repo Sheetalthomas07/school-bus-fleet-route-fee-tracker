@@ -265,6 +265,7 @@ class NavigationAnimator:
 
     def request_navigation(self, target_name, switch_action, current_page=None):
         if self._reduced_motion:
+            self._hide_travel_bus()
             page = switch_action()
             self.set_active(target_name)
             self._reveal_reduced_motion_page(page)
@@ -278,6 +279,7 @@ class NavigationAnimator:
             return
 
         self._busy = True
+        self._hide_travel_bus()
         source_name = self.active_name
         source_index = self.menu_order.index(source_name)
         target_index = self.menu_order.index(target_name)
@@ -353,6 +355,7 @@ class NavigationAnimator:
             return
 
         self._busy = True
+        self._hide_travel_bus()
         self.set_active(name)
 
         def complete():
@@ -471,34 +474,18 @@ class NavigationAnimator:
                 self.root.after(29, lambda: animate_wipe(step + 1, steps))
             else:
                 title_clip.configure(width=title_width)
+                canvas.configure(width=44, height=28)
+                canvas.delete("all")
+                self._draw_side_bus(canvas)
                 canvas.place(
                     in_=self.root,
-                    x=title_x + title_width - 57,
-                    y=title_y - 5
+                    x=title_x + title_width + 8,
+                    y=title_y + max(0, (title_label.winfo_reqheight() - 28) // 2)
                 )
                 self._raise_widget(canvas)
-                animate_exit(0)
-
-        def animate_exit(step, steps=10):
-            progress = step / steps
-            exit_x = round(
-                title_x + title_width - 57
-                + (70 * progress)
-            )
-            canvas.place(in_=self.root, x=exit_x, y=title_y - 5)
-            if step < steps:
-                if step == steps // 2:
-                    canvas.configure(width=44, height=28)
-                    canvas.delete("all")
-                    self._draw_side_bus(canvas)
-                self._raise_widget(canvas)
-                self.root.after(30, lambda: animate_exit(step + 1, steps))
-            else:
                 self.root.after(120, finish_heading)
 
         def finish_heading():
-            self._hide_travel_bus()
-
             reveal_items = []
             hidden = meta.get("_hidden", {})
             for widget, pack_info in hidden.values():
