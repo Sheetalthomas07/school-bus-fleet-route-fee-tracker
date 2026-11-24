@@ -477,9 +477,14 @@ class NavigationAnimator:
                 canvas.configure(width=44, height=28)
                 canvas.delete("all")
                 self._draw_side_bus(canvas)
+                title_right = (
+                    title_clip.winfo_rootx()
+                    - self.root.winfo_rootx()
+                    + title_clip.winfo_width()
+                )
                 canvas.place(
                     in_=self.root,
-                    x=title_x + title_width + 8,
+                    x=title_right + 8,
                     y=title_y + max(0, (title_label.winfo_reqheight() - 28) // 2)
                 )
                 self._raise_widget(canvas)
