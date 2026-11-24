@@ -22,7 +22,7 @@ def create_module_header(parent, title, subtitle, metrics=()):
     title_clip = tk.Frame(
         title_area,
         width=1,
-        height=38,
+        height=56,
         bg=theme.BACKGROUND
     )
     title_clip.pack_propagate(False)

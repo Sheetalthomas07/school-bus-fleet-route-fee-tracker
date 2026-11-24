@@ -591,7 +591,7 @@ admin_label.pack(anchor="w")
 dashboard_title_clip = tk.Frame(
     heading_text,
     width=1,
-    height=34,
+    height=56,
     bg=theme.BACKGROUND
 )
 dashboard_title_clip.pack_propagate(False)

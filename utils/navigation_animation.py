@@ -342,7 +342,9 @@ class NavigationAnimator:
         title_clip = meta.get("title_clip")
         title_label = meta.get("title_label")
         if title_clip is not None and title_label is not None:
-            title_clip.configure(width=max(title_label.winfo_reqwidth(), 60))
+            title_clip.configure(
+                width=max(title_label.winfo_reqwidth() + 12, 72)
+            )
 
     def run_initial_heading(self, page, name="Dashboard"):
         if self._reduced_motion:
@@ -434,7 +436,7 @@ class NavigationAnimator:
                                outline=theme.TEXT_PRIMARY)
 
         draw_big_bus()
-        title_width = max(title_label.winfo_reqwidth(), 60)
+        title_width = max(title_label.winfo_reqwidth() + 12, 72)
 
         def animate_diagonal(step, steps=21):
             progress = step / steps
