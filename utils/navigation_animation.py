@@ -443,13 +443,15 @@ class NavigationAnimator:
             x = round(start_x + (title_x - start_x - 10) * eased)
             y = round(start_y + (title_y - start_y - 7) * eased - bounce)
             canvas.place(in_=self.root, x=x, y=y)
+            self._raise_widget(canvas)
             if step < steps:
                 self.root.after(33, lambda: animate_diagonal(step + 1, steps))
             else:
-                canvas.configure(width=44, height=28)
-                canvas.place(in_=self.root, x=title_x - 16, y=title_y + 1)
+                canvas.configure(width=66, height=42)
+                canvas.place(in_=self.root, x=title_x - 33, y=title_y - 5)
                 canvas.delete("all")
-                self._draw_side_bus(canvas)
+                draw_big_bus()
+                self._raise_widget(canvas)
                 animate_wipe(0)
 
         def animate_wipe(step, steps=24):
@@ -459,16 +461,38 @@ class NavigationAnimator:
             title_clip.configure(width=reveal_width)
             canvas.place(
                 in_=self.root,
-                x=title_x + reveal_width - 22,
-                y=title_y + 1
+                x=title_x + reveal_width - 57,
+                y=title_y - 5
             )
+            self._raise_widget(canvas)
             if step < steps:
                 self.root.after(29, lambda: animate_wipe(step + 1, steps))
             else:
                 title_clip.configure(width=title_width)
-                canvas.place(in_=self.root, x=title_x + title_width + 12,
-                             y=title_y + 1)
-                self.root.after(180, finish_heading)
+                canvas.place(
+                    in_=self.root,
+                    x=title_x + title_width - 57,
+                    y=title_y - 5
+                )
+                self._raise_widget(canvas)
+                animate_exit(0)
+
+        def animate_exit(step, steps=10):
+            progress = step / steps
+            exit_x = round(
+                title_x + title_width - 57
+                + (70 * progress)
+            )
+            canvas.place(in_=self.root, x=exit_x, y=title_y - 5)
+            if step < steps:
+                if step == steps // 2:
+                    canvas.configure(width=44, height=28)
+                    canvas.delete("all")
+                    self._draw_side_bus(canvas)
+                self._raise_widget(canvas)
+                self.root.after(30, lambda: animate_exit(step + 1, steps))
+            else:
+                self.root.after(120, finish_heading)
 
         def finish_heading():
             self._hide_travel_bus()

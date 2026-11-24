@@ -16,7 +16,8 @@ from utils.rounded_widgets import (
 from utils.module_ui import (
     bind_preview_updates,
     create_live_preview,
-    create_module_header
+    create_module_header,
+    bind_module_navigation
 )
 
 
@@ -506,5 +507,6 @@ def open_bus_passes_module(parent, on_change=None):
 
     load_passes()
     student_combo.focus_set()
+    bind_module_navigation(pass_page, pass_window)
     apply_interactive_effects(pass_page, fade=False)
     return pass_page

@@ -22,7 +22,7 @@ def create_module_header(parent, title, subtitle, metrics=()):
     title_clip = tk.Frame(
         title_area,
         width=1,
-        height=32,
+        height=38,
         bg=theme.BACKGROUND
     )
     title_clip.pack_propagate(False)
@@ -89,6 +89,28 @@ def create_module_header(parent, title, subtitle, metrics=()):
     }
 
     return header
+
+
+def bind_module_navigation(page, window):
+
+    header = next(
+        (
+            widget
+            for widget in window.winfo_children()
+            if hasattr(widget, "_navigation_heading_meta")
+        ),
+        None
+    )
+    if header is None:
+        return
+
+    meta = header._navigation_heading_meta
+    meta["rest_widgets"] = tuple(
+        widget
+        for widget in window.winfo_children()
+        if widget is not header
+    )
+    page._navigation_heading_meta = meta
 
 
 def create_live_preview(parent, title, badge, details, icon="•"):

@@ -16,7 +16,8 @@ from utils.rounded_widgets import (
 from utils.module_ui import (
     bind_preview_updates,
     create_live_preview,
-    create_module_header
+    create_module_header,
+    bind_module_navigation
 )
 
 def open_stops_module(parent):
@@ -817,5 +818,6 @@ def open_stops_module(parent):
 
     fields_frame.grid_columnconfigure(0, weight=1)
     fields_frame.grid_columnconfigure(1, weight=1)
+    bind_module_navigation(stops_page, stops_window)
     apply_interactive_effects(stops_page, fade=False)
     return stops_page

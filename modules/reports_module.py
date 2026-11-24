@@ -17,7 +17,8 @@ from utils.rounded_widgets import (
 from utils.module_ui import (
     bind_preview_updates,
     create_live_preview,
-    create_module_header
+    create_module_header,
+    bind_module_navigation
 )
 
 
@@ -598,5 +599,6 @@ def open_reports_module(parent):
     export_button.config(command=export_report)
 
     load_report()
+    bind_module_navigation(report_page, report_window)
     apply_interactive_effects(report_page, fade=False)
     return report_page

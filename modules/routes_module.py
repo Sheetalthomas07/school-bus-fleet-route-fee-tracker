@@ -16,7 +16,8 @@ from utils.rounded_widgets import (
 from utils.module_ui import (
     bind_preview_updates,
     create_live_preview,
-    create_module_header
+    create_module_header,
+    bind_module_navigation
 )
 
 
@@ -752,13 +753,6 @@ def open_routes_module(parent):
 
     load_routes(animate_counts=True)
     route_entry.focus_set()
-    module_header._navigation_heading_meta["rest_widgets"] = tuple(
-        widget
-        for widget in routes_window.winfo_children()
-        if widget is not module_header
-    )
-    routes_page._navigation_heading_meta = (
-        module_header._navigation_heading_meta
-    )
+    bind_module_navigation(routes_page, routes_window)
     apply_interactive_effects(routes_page, fade=False)
     return routes_page

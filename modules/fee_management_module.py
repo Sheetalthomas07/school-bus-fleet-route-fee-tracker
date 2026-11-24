@@ -18,7 +18,8 @@ from utils.rounded_widgets import (
 from utils.module_ui import (
     bind_preview_updates,
     create_live_preview,
-    create_module_header
+    create_module_header,
+    bind_module_navigation
 )
 
 
@@ -1034,5 +1035,6 @@ def open_fee_management_module(parent, on_change=None):
     load_students()
     load_payment_history()
     student_combo.focus_set()
+    bind_module_navigation(fee_page, fee_window)
     apply_interactive_effects(fee_page, fade=False)
     return fee_page

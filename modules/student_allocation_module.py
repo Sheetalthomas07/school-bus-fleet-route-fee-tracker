@@ -17,7 +17,8 @@ from utils.rounded_widgets import (
 from utils.module_ui import (
     bind_preview_updates,
     create_live_preview,
-    create_module_header
+    create_module_header,
+    bind_module_navigation
 )
 
 
@@ -1132,5 +1133,6 @@ def open_student_allocation_module(parent, on_change=None):
     load_routes()
     load_allocations()
     reg_no_entry.focus_set()
+    bind_module_navigation(allocation_page, allocation_window)
     apply_interactive_effects(allocation_page, fade=False)
     return allocation_page
